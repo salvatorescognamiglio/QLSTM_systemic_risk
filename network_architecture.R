@@ -1,5 +1,6 @@
 
 #Hyperparameter setting
+N = c(3034,14)
 ini = initializer_ones()
 u = 8
 
