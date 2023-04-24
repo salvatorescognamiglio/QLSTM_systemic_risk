@@ -71,7 +71,7 @@ var_median =  features_median %>% layer_dense(units = N[2],weights = list(all_w[
 pre_quantile =  features_quantile %>% layer_dense(units = N[2], activation ='relu', weights = list(all_w[[9]], all_w[[10]])) %>%layer_reshape(c(1,N[2]), name = "pre_quantile")
 var_quantile = var_median %>% list(pre_quantile) %>% layer_subtract()%>%layer_reshape(c(1,N[2]))
 
-d = layer_dense(units = 1, activation =act_covar, kernel_constraint = constraint_nonneg(), bias_constraint = constraint_nonneg())
+d = layer_dense(units = 1, activation ='linear', kernel_constraint = constraint_nonneg(), bias_constraint = constraint_nonneg())
 
 covar_median = var_median %>%
   layer_reshape(c(N[2],1)) %>%time_distributed(d, weights = list(all_w[[11]], all_w[[12]])) %>% layer_reshape(c(1,N[2]), name = "covar_median")  
