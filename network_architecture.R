@@ -1,7 +1,5 @@
 
 #Hyperparameter setting
-act = "tanh"
-act_var = "linear"
 ini = initializer_ones()
 u = 8
 
