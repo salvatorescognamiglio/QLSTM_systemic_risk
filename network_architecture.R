@@ -1,17 +1,35 @@
+library(keras)
+library(dplyr)
+
+#Sample size 
+N = c(3034,14)
+
 
 #Hyperparameter setting
-N = c(3034,14)
 ini = initializer_ones()
 u = 8
 
+### Loss functions 
+tilted_loss_median <- function( y, f) {
+  q = 0.5
+  e <- y - f
+  k_mean(k_maximum(q * e, (q - 1) * e), axis = 2)
+}
 
-library(keras)
+tilted_loss_lower <- function( y, f) {
+  q = 0.01
+  e <- y - f
+  k_mean(k_maximum(q * e, (q - 1) * e), axis = 2)
+}
+
+
+
 options(keras.view_metrics = FALSE)
 
 k_clear_session()
 
 
-rates <- layer_input(shape = c(wind,N[2]), dtype = 'float32', name = 'rates')
+rates <- layer_input(shape = c(120,N[2]), dtype = 'float32', name = 'rates')
 features_median = rates %>%layer_lstm(units = u, name = "feature_median", kernel_initializer = ini, 
                                       recurrent_initializer = ini, bias_initializer =  ini)
 features_quantile = rates %>%layer_lstm(units = u,name = "feature_quantile", kernel_initializer = ini, 
@@ -80,4 +98,3 @@ covar_quantile = var_quantile %>%
 model <- keras_model(
   inputs = list(rates), 
   outputs = c(var_median, var_quantile, covar_median, covar_quantile))
-
